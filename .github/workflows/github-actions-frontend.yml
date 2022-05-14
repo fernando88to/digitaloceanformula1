@@ -2,12 +2,13 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      main:
 
 
-defaults:
-  run:
-    working-directory: frontend
+#defaults:
+#  run:
+#    working-directory: frontend
 
 env:
   REGISTRY: "registry.digitalocean.com/fernando88to"
