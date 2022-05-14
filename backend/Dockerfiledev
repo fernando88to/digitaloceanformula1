@@ -1,0 +1,16 @@
+FROM eclipse-temurin:17.0.2_8-jdk
+
+USER root
+
+RUN groupadd --gid 1000 appuser \
+    && useradd --uid 1000 --gid appuser --shell /bin/bash --create-home appuser
+
+USER appuser
+
+RUN  mkdir -p /home/appuser/.gradle
+
+#RUN  mkdir -p /home/appuser/.gradle/wrapper/dists \
+#    && mkdir -p /home/appuser/.gradle/wrapper/cache
+
+EXPOSE 8080
+EXPOSE 5005

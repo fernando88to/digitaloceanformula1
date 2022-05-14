@@ -1,0 +1,83 @@
+#### gitingore backend
+
+# Gradle
+backend/.gradle
+backend/build/
+
+# Eclipse
+backend/.project
+backend/.classpath
+backend/.settings/
+backend/bin/
+
+# IntelliJ
+.idea
+backend/.idea
+frontend/.idea
+backend/*.ipr
+backend/*.iml
+backend/*.iws
+
+# NetBeans
+backend/nb-configuration.xml
+
+# Visual Studio Code
+backend/.vscode
+backend/.factorypath
+
+# OSX
+backend/.DS_Store
+
+# Vim
+*.swp
+*.swo
+
+# patch
+*.orig
+*.rej
+
+# Local environment
+.env
+backend/.env
+frontend/.env
+
+#### gitingore front-end
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+#dependencies
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+
+# testing
+frontend/coverage
+
+# next.js
+frontend/.next/
+frontend/out/
+
+# production
+frontend/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# local env files
+frontend/.env*.local
+
+# vercel
+frontend/.vercel
+
+# typescript
+frontend/*.tsbuildinfo
+
+
+
+

@@ -1,0 +1,22 @@
+version: "3.3"
+
+services:
+
+  backend:
+    image: "registry.digitalocean.com/fernando88to/backendformula1:${TAG_IMAGE}"
+    restart: always
+    hostname: backend
+    env_file:
+      - .env
+    volumes:
+      - ./ca-certificate.crt:/app/certificate/ca-certificate.crt
+#    environment:
+#      - DB_USERNAME=${DB_USERNAME}
+#      - DB_PASSWORD=${DB_PASSWORD}
+#      - DB_CERTIFICATE=${DB_CERTIFICATE}
+#      - DB_URL=${DB_URL}
+
+networks:
+  default:
+    external:
+      name: external-rede

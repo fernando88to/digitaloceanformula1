@@ -1,0 +1,9 @@
+#the build will be done in docker multi-stage build
+#*
+#!build/*-runner
+#!build/*-runner.jar
+#!build/lib/*
+#!build/quarkus-app/*
+
+.gradle/*
+.gradle

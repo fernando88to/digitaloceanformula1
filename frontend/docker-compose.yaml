@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+
+  frontend:
+    image: "registry.digitalocean.com/fernando88to/frontendformula1:${TAG_IMAGE}"
+    restart: always
+    hostname: frontend
+    environment:
+      - BACKEND_HOST='https://applicacao.dev.br/backend'
+
+networks:
+  default:
+    external:
+      name: external-rede
