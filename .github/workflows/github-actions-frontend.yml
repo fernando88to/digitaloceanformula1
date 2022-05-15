@@ -2,10 +2,10 @@ name: CI/CD
 
 on:
   push:
+    branches:
+      - 'main'
     paths:
-      - 'frontend/**'
-    branches: [main]
-
+      - 'frontend/**/*'
 
 
 
