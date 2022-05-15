@@ -41,9 +41,9 @@ jobs:
 
   copy_docker_compose:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
+#    defaults:
+#      run:
+#        working-directory: ./frontend
     needs: build_and_push
     steps:
       - uses: actions/checkout@master
@@ -53,5 +53,5 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }} # cat ~/.ssh/id_rsa
-          source: "docker-compose.yaml"
+          source: "frontend/docker-compose.yaml"
           target: "/app/frontend" # esse diretorio tem que está criado
