@@ -7,123 +7,35 @@ on:
     paths:
       - 'frontend/**'
 
-
-defaults:
-  run:
-    working-directory: '../frontend'
-
-#  run:
-#    working-directory: frontend
-
 env:
   REGISTRY: "registry.digitalocean.com/fernando88to"
-  IMAGE_NAME: "backendformula1"
+  IMAGE_NAME: "frontendformula1"
 
 jobs:
-  build:
-    name: Build
+  build_and_push:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Checkout the repo
+        uses: actions/checkout@v2
 
-#3
-#jobs:
-#  build_apk:
-#    name: teste
-#    runs-on: ubuntu-latest
+      - name: Build container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
-#  build_and_push:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout the repo
-#        uses: actions/checkout@v2
-#
-#      - name: Build container image
-#        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
-#
-#      - name: Install doctl
-#        uses: digitalocean/action-doctl@v2
-#        with:
-#          token: ${{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }}
-#
-#      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-#        run: doctl registry login --expiry-seconds 600
-#
-#      - name: Remove all old images
-#        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
-#
-#      - name: Push image to DigitalOcean Container Registry
-#        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-#
-#
-#  copy_docker_compose:
-#    runs-on: ubuntu-latest
-#    needs: build_and_push
-#    steps:
-#      - uses: actions/checkout@master
-#      - name: copy file via ssh password
-#        uses: appleboy/scp-action@master
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          key: ${{ secrets.KEY }} # cat ~/.ssh/id_rsa
-#          source: "docker-compose.yaml"
-#          target: "/app/backend" # esse diretorio tem que está criado
-#
-#
-#  copy_acess_database:
-#    runs-on: ubuntu-latest
-#    needs:
-#      - build_and_push
-#      - copy_docker_compose
-#    steps:
-#      - name: Deploy to Digital Ocean droplet via SSH action
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          key: ${{ secrets.KEY }} # cat ~/.ssh/id_rsa
-#          envs: IMAGE_NAME,REGISTRY,{{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }},GITHUB_SHA
-#          script: |
-#            cd /app/backend
-#            touch /app/backend/ca-certificate.crt
-#            echo ${{ secrets.CACERTIFICATE }} >> /app/backend/rascunho.crt
-#            cat rascunho.crt | base64  --decode > ca-certificate.crt
-#            rm rascunho.crt
-#            touch .env
-#            #limpa o arquivo
-#            > .env
-#            echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
-#            echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
-#            echo 'DB_CERTIFICATE=?sslmode=verify-full&sslrootcert=/app/certificate/ca-certificate.crt' >> .env
-#            echo DB_URL=${{ secrets.DB_URL }} >> .env
-#
-#
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs:
-#      - build_and_push
-#      - copy_docker_compose
-#      - copy_acess_database
-#
-#    steps:
-#      - name: Deploy to Digital Ocean droplet via SSH action
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          key: ${{ secrets.KEY }} # cat ~/.ssh/id_rsa
-#          envs: IMAGE_NAME,REGISTRY,{{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }},GITHUB_SHA
-#          script: |
-#            # Login to registry
-#            docker login -u ${{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }} -p ${{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }} registry.digitalocean.com
-#            # pull imagem first
-#            docker pull $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-#            cd /app/backend
-#            # Stop running container
-#            docker-compose down
-#            # joga a tag da imagem mais recente gerada no arquivo .env
-#            echo TAG_IMAGE=$(echo $GITHUB_SHA | head -c7) >> .env
-#            docker-compose  up  -d --build
-#            docker system prune --all -f
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Remove all old images
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+
+
