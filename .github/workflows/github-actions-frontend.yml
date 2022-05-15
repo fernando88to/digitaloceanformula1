@@ -8,6 +8,9 @@ on:
       - 'frontend/**'
 
 
+defaults:
+  run:
+    working-directory: 'frontend'
 
 #  run:
 #    working-directory: frontend
@@ -20,6 +23,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
 
