@@ -1,0 +1,82 @@
+version: "3.9"
+
+services:
+
+
+  frontend_dev:
+    container_name: frontend_dev
+    build:
+      context: frontend
+      dockerfile: Dockerfiledev
+    ports:
+      - "3000:3000"
+    working_dir: /frontend
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+      - /frontend/.next
+    networks:
+      - default
+#    depends_on:
+#      database_dev:
+#        condition: service_healthy
+    entrypoint: yarn dev
+
+
+
+  db:
+    image: postgres:14.1-alpine
+    hostname: db_postgresql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=app_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_postgresql:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  backend:
+    hostname: backend
+    build:
+      context: backend
+      dockerfile: Dockerfiledev
+    ports:
+      - "5005:5005" # for debugging
+      - "8080:8080"
+    working_dir: /back-end-quarkus
+    volumes:
+      - ./backend/:/back-end-quarkus
+      - cache_gradle_dev:/home/appuser/.gradle
+    networks:
+      - default
+    entrypoint: ./gradlew quarkusDev -Dquarkus.http.host=0.0.0.0 --no-daemon
+    #entrypoint: ./gradlew quarkusDev -Dquarkus.http.host=0.0.0.0
+    #entrypoint: ./gradlew quarkusDev -Dquarkus.http.host=0.0.0.0 -DdebugHost=0.0.0.0 --no-daemon
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+
+
+
+
+
+
+
+
+volumes:
+  db_postgresql:
+  cache_gradle_dev:
+    driver: local
+
+networks:
+  default:
+    driver: bridge

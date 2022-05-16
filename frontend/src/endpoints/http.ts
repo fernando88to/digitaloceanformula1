@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-const http = axios.create({
-   //baseURL: process.env.BACKEND_HOST ?? 'http://0.0.0.0:8080/backend',
-   baseURL: 'https://applicacao.dev.br/backend/v1',
 
+const env = process.env.NODE_ENV
+let baseURL = env == "production" ? 'https://applicacao.dev.br/backend/v1' : 'http://localhost:8080/backend/v1';
+
+const http = axios.create({
+   baseURL: baseURL
 });
 
 
