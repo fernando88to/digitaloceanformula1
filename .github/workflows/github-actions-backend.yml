@@ -54,34 +54,38 @@ jobs:
           target: "/app/backend" # esse diretorio tem que está criado
 
 
-#  copy_acess_database:
-#    runs-on: ubuntu-latest
-#    needs:
-#      - build_and_push
-#      - copy_docker_compose
-#    steps:
-#      - name: Deploy to Digital Ocean droplet via SSH action
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          key: ${{ secrets.KEY }} # cat ~/.ssh/id_rsa
-#          envs: IMAGE_NAME,REGISTRY,{{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }},GITHUB_SHA
-#          script: |
-#            cd /app/backend
-#            touch /app/backend/ca-certificate.crt
-#            echo ${{ secrets.CACERTIFICATE }} >> /app/backend/rascunho.crt
-#            cat rascunho.crt | base64  --decode > ca-certificate.crt
-#            rm rascunho.crt
-#            touch .env
-#            #limpa o arquivo
-#            > .env
-#            echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
-#            echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
-#            echo 'DB_CERTIFICATE=?sslmode=verify-full&sslrootcert=/app/certificate/ca-certificate.crt' >> .env
-#            echo DB_URL=${{ secrets.DB_URL }} >> .env
-#
-#
+  copy_acess_database:
+    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: ./backend
+    needs:
+      - build_and_push
+      - copy_docker_compose
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }} # cat ~/.ssh/id_rsa
+          envs: IMAGE_NAME,REGISTRY,{{ secrets.TOKEN_REGISTRY_DIGITAL_OCEAN }},GITHUB_SHA
+          script: |
+            cd /app/backend
+            touch /app/backend/ca-certificate.crt
+            #encode base64
+            echo ${{ secrets.CACERTIFICATE }} >> /app/backend/rascunho.crt
+            cat rascunho.crt | base64  --decode > ca-certificate.crt
+            rm rascunho.crt
+            touch .env
+            #limpa o arquivo
+            > .env
+            echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
+            echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+            echo 'DB_CERTIFICATE=?sslmode=verify-full&sslrootcert=/app/certificate/ca-certificate.crt' >> .env
+            echo DB_URL=${{ secrets.DB_URL }} >> .env
+
+
 #  deploy:
 #    runs-on: ubuntu-latest
 #    needs:
