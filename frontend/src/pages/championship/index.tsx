@@ -29,7 +29,6 @@ const ChampionshipHome: NextPage<MyProps> = ({}) => {
     const itemSelected = (key: any) => {
         const championshipSelected = key as Championship;
         setChampionshipSelected(championshipSelected);
-        //console.log(championshipSelected.id + ' ' + championshipSelected.year);
     }
 
     return (
@@ -39,12 +38,12 @@ const ChampionshipHome: NextPage<MyProps> = ({}) => {
                     <div className="mb-3">
                         <label htmlFor="id" className="form-label">ID</label>
                         <input type="number" className="form-control" id="id" autoComplete='off'
-                               readOnly={true} aria-describedby="id" value={championshipSelected?.id}/>
+                               readOnly={true} aria-describedby="id" value={championshipSelected?.id || ''}/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="year" className="form-label">Year</label>
-                        <input type="number" className="form-control" id="year"
-                               value={championshipSelected?.year}/>
+                        <input type="number" className="form-control" id="year" readOnly={true}
+                               value={championshipSelected?.year || ''}/>
                     </div>
 
                 </form>
