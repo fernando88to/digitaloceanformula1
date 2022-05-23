@@ -41,6 +41,14 @@ export const LateralMenu = (props: Props) => {
                                 </a>
                             </Link>
                         </li>
+                        <li>
+                            <Link href="/championship/index2">
+                                <a className="nav-link px-3">
+                                    <span className="me-2"><i className="bi bi-book-fill"></i></span>
+                                    <span>Championship 2</span>
+                                </a>
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
             </div>
