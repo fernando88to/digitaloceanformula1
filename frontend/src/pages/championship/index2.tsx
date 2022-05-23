@@ -1,7 +1,10 @@
 import {NextPage} from "next";
 import {LayoutBootstrap} from "../../components/LayoutBootstrap/LayoutBootstrap";
-import {useEffect} from "react";
-//import { Modal }  from 'bootstrap/dist/js/bootstrap';
+import {useEffect, useState} from "react";
+
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 
 
 interface Iprops {
@@ -10,50 +13,45 @@ interface Iprops {
 
 export const IndexPage:NextPage<Iprops> = ({}) =>{
 
-    function openModal() {
-        //var modal = document.getElementById('exampleModal');
-        //document.getElementById("backdrop").style.display = "block"
-        //document.getElementById("exampleModal").style.display = "block"
-        //document.getElementById("exampleModal").classList.add("show")
-        // let modal = document.getElementById('exampleModal');
-        //  if(modal){
-        //      modal.classList.add("show");
-        //      modal.show();
-        //      //modal.style.display = "block";
-        //  }
-        //var myModal = new Modal(document.getElementById('exampleModal'))
-        //myModal.show()
 
-        let modal = document.getElementById('exampleModal');
-        const bsModal = new Modal(modal, {
-            backdrop: 'static',
-            keyboard: false
-        })
-        bsModal.show()
+    const [show, setShow] = useState(false);
 
-
-    }
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
 
     useEffect(()=>{
 
 
 
-        /*var myModal = new Modal(document.getElementById('myModal'), {})
-        myModal.toggle()*/
 
-        /*let modal = document.getElementById('myModal');
-        if(modal){
-            modal.classList.add("show");
-            modal.style.display = "block";
-        }*/
 
     },[]);
 
     return (
         <LayoutBootstrap title="ChampionShip">
-            
-            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+
+
+            <Button variant="primary" onClick={handleShow}>
+                Launch demo modal
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/*<button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Launch demo modal
             </button>
             <button type="button" className="btn btn-primary"  onClick={openModal}>
@@ -77,7 +75,7 @@ export const IndexPage:NextPage<Iprops> = ({}) =>{
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>*/}
 
             
 
