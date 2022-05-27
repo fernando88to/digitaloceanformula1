@@ -1,32 +1,43 @@
 import {NextPage} from "next";
 import {LayoutBootstrap} from "../../components/LayoutBootstrap/LayoutBootstrap";
-import {useEffect, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
 
 
 interface Iprops {
 
 }
 
-export const IndexPage:NextPage<Iprops> = ({}) =>{
+interface ChampionShip {
+    year: number,
+    begindate: Date,
+    enddate: Date
+}
+
+export const IndexPage: NextPage<Iprops> = ({}) => {
 
 
     const [show, setShow] = useState(false);
 
+    const [championshipInstance, setChampionshipInstance] = useState({} as ChampionShip);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const saveNewChampionship = () =>{
+        console.log(championshipInstance);
+    }
 
-    useEffect(()=>{
+    const handleChangesForm = (event: FormEvent<HTMLInputElement>) => {
+        console.log(event.currentTarget.value);
+
+    }
+
+    useEffect(() => {
 
 
-
-
-
-    },[]);
+    }, []);
 
     return (
         <LayoutBootstrap title="ChampionShip">
@@ -38,14 +49,35 @@ export const IndexPage:NextPage<Iprops> = ({}) =>{
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Register of the a new Championship</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                <Modal.Body>
+                    <form>
+                        <div className="mb-3">
+                            <label htmlFor="exampleInputEmail1" className="form-label">Year</label>
+                            <input type="number" className="form-control"
+                                    value={championshipInstance.year}
+                                   id="exampleInputEmail1" onChange={handleChangesForm}
+                                   min={0} step={1} aria-describedby="emailHelp"/>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="begindate" className="form-label">Begin' date</label>
+                            <input type="date" className="form-control" id="begindate"/>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="beginend" className="form-label">Begin' end</label>
+                            <input type="date" className="form-control" id="beginend"/>
+                        </div>
+
+
+                    </form>
+
+                </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button variant="primary" onClick={saveNewChampionship}>
                         Save Changes
                     </Button>
                 </Modal.Footer>
@@ -77,7 +109,6 @@ export const IndexPage:NextPage<Iprops> = ({}) =>{
                 </div>
             </div>*/}
 
-            
 
             <div className="row text-end">
                 <div className="col-12">
