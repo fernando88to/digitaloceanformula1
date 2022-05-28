@@ -1,9 +1,13 @@
 import {NextPage} from "next";
 import {LayoutBootstrap} from "../../components/LayoutBootstrap/LayoutBootstrap";
-import React, {FormEvent, useEffect, useState} from "react";
+import React, {FormEvent, useCallback, useEffect, useState} from "react";
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import {cep} from "../../components/Input/mask";
+import InputMask from "../../components/Input/InputMask";
+
+
 //https://www.npmjs.com/package/react-imask
 
 interface Iprops {
@@ -14,6 +18,7 @@ interface ChampionShip {
     year: string,
     begindate: string,
     enddate: string
+    zipcod: string
 }
 
 export const IndexPage: NextPage<Iprops> = ({}) => {
@@ -40,13 +45,12 @@ export const IndexPage: NextPage<Iprops> = ({}) => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(championshipInstance);
-
-
     }
-    useEffect(() => {
 
 
-    }, []);
+    const handleKeyUp  = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+        cep(e);
+    },[]);
 
     return (
         <LayoutBootstrap title="ChampionShip">
@@ -71,6 +75,16 @@ export const IndexPage: NextPage<Iprops> = ({}) => {
                                    id="exampleInputEmail1"
                                    min={0} step={1} aria-describedby="emailHelp"/>
                         </div>
+
+                      {/*  <div className="mb-3">
+                            <label htmlFor="zipcod" className="form-label">Zip Code</label>
+                            <input type="text" className="form-control" id="zipcod"
+                                   onChange={handleChangesForm}
+                                   onKeyUp={handleKeyUp}
+                                   value={championshipInstance.zipcod || ''}
+                                   name="zipcod"/>
+                        </div>*/}
+
                         <div className="mb-3">
                             <label htmlFor="begindate" className="form-label">Begin' date</label>
                             <input type="date" className="form-control" id="begindate"
@@ -85,6 +99,28 @@ export const IndexPage: NextPage<Iprops> = ({}) => {
                                    value={championshipInstance.enddate || ''}
                                    name="enddate"/>
                         </div>
+                        <div className="mb-3">
+                            <label htmlFor="zipcod" className="form-label">ZipCode</label>
+                            <InputMask type="text" className="form-control" id="zipcod"
+                                       onChange={handleChangesForm} mask="cep"
+                                       value={championshipInstance.zipcod || ''}
+                                       name="zipcod"/>
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">ZipCode</label>
+                            <InputMask type="text" className="form-control"
+                                        mask="cpf"/>
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">ZipCode</label>
+                            <InputMask type="text" className="form-control"
+                                       mask="currency"/>
+                        </div>
+
+
+
 
 
                     </Modal.Body>
@@ -96,17 +132,6 @@ export const IndexPage: NextPage<Iprops> = ({}) => {
                 </form>
 
             </Modal>
-
-
-
-
-            <div className="row text-end">
-                <div className="col-12">
-                    <button type="button" className="btn btn-primary">Cadastrar</button>
-                </div>
-
-            </div>
-
         </LayoutBootstrap>
     );
 
